@@ -5,6 +5,7 @@ import s4 from './s4.jpg'
 import s5 from './s5.jpeg'
 import s6 from './s6.jpg'
 import s7 from './s7.webp'
+import slogo from './slogo.webp'
 
 const assets = {
 s1,
@@ -13,7 +14,8 @@ s3,
 s4,
 s5,
 s6,
-s7
+s7,
+slogo
 }
 
 export default assets

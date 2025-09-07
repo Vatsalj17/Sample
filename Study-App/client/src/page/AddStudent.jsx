@@ -2,6 +2,9 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import assets from '../assets/assets'
+import InputField from '../Components/InputField'
+import Button from '../Components/Button'
+import Navbar from '../Components/Navbar'
 
 const AddStudent = () => {
   const [loading, setLoading] = useState(false)
@@ -40,8 +43,8 @@ const AddStudent = () => {
         )
       }
       setMessage('All students added successfully!')
-      navigate("/schoolDashboard")
       setStudents([{ admissionNumber: '' }])
+      navigate(`/schoolDashboard`)
     } catch (error) {
       setMessage(error?.response?.data?.message || 'Error Occurred')
     } finally {
@@ -50,130 +53,75 @@ const AddStudent = () => {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${assets.s6})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-100/40 via-sky-200/30 to-blue-100/40"></div>
-      </div>
+    <div
+      className="relative min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${assets.s1})` }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/20"></div>
 
-      {/* Content Container */}
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Navigation Header */}
-        <div className="flex justify-between items-center p-6">
-          <div className="flex space-x-4">
-            <button 
-              onClick={() => navigate('/schoolDashboard')}
-              className="px-6 py-3 bg-sky-200/60 backdrop-blur-md text-sky-800 font-semibold rounded-full hover:bg-sky-300/70 transition-all duration-300 shadow-lg border border-sky-300/30"
-            >
-              Dashboard
-            </button>
-            <button 
-              onClick={() => navigate('/')}
-              className="px-6 py-3 bg-white/50 backdrop-blur-md text-sky-700 font-semibold rounded-full hover:bg-white/70 transition-all duration-300 shadow-lg border border-sky-200/40"
-            >
-              Home
-            </button>
-          </div>
-        </div>
+      {/* Content wrapper that scrolls */}
+      <div className="relative z-10 flex flex-col">
+        {/* Navbar */}
+        <Navbar 
+          logo={assets.slogo} 
+          title={'Add Students'} 
+          onButtonClick={() => navigate('/schoolDashboard')} 
+          buttonName={'Back'}
+        />
+        
+        {/* Main Content - Properly spaced below navbar */}
+        <div className="flex items-center justify-center min-h-[calc(100vh-120px)] p-4 pt-16 sm:pt-20 md:pt-24">
+          {/* Form Container */}
+          <div className="w-full max-w-lg bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-sky-200/20">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-sky-800 drop-shadow-lg">
+              Add Students
+            </h2>
 
-        {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center p-6">
-          <div className="w-full max-w-2xl">
-            {/* Title */}
-            <div className="text-center mb-8">
-              <h2 className="text-4xl font-bold text-sky-800 mb-2 drop-shadow-sm">
-                Add Students
-              </h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-sky-400 to-blue-400 mx-auto rounded-full"></div>
-            </div>
-
-            {/* Form Container */}
-            <div className="bg-white/20 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-sky-200/30">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {students.map((s, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="bg-sky-50/50 backdrop-blur-sm rounded-2xl p-6 border border-sky-200/40 shadow-lg">
-                      <label className="block text-sky-800 font-semibold mb-3 text-lg">
-                        Admission Number:
-                      </label>
-                      <div className="flex items-center space-x-4">
-                        <input
-                          type="text"
-                          value={s.admissionNumber}
-                          required
-                          onChange={(e) => handleChange(index, e.target.value)}
-                          className="flex-1 px-4 py-3 bg-white/70 backdrop-blur-sm border-2 border-sky-200/50 rounded-xl focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200/50 transition-all duration-300 text-sky-900 placeholder-sky-400"
-                          placeholder="Enter roll number..."
-                        />
-                        {students.length > 1 && (
-                          <button 
-                            type="button" 
-                            onClick={() => removeStudentField(index)}
-                            className="px-4 py-3 bg-red-200/60 backdrop-blur-sm text-red-700 font-medium rounded-xl hover:bg-red-300/70 transition-all duration-300 shadow-md border border-red-300/40"
-                          >
-                            Remove
-                          </button>
-                        )}
-                      </div>
-                    </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {students.map((student, index) => (
+                <div key={index} className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4">
+                  <div className="flex-1">
+                    <InputField
+                      label={`Admission Number ${index + 1}`}
+                      value={student.admissionNumber}
+                      onChange={(e) => handleChange(index, e.target.value)}
+                      placeholder="Enter Admission Number"
+                    />
                   </div>
-                ))}
-
-                {/* Action Buttons */}
-                <div className="flex flex-col space-y-4 pt-4">
-                  <button 
-                    type="button" 
-                    onClick={addStudentField}
-                    className="w-full py-4 bg-sky-200/60 backdrop-blur-md text-sky-800 font-semibold rounded-xl hover:bg-sky-300/70 transition-all duration-300 shadow-lg border border-sky-300/40 text-lg"
-                  >
-                    + Add Another Student
-                  </button>
-                  
-                  <button 
-                    type="submit" 
-                    disabled={loading}
-                    className={`w-full py-4 font-bold text-lg rounded-xl transition-all duration-300 shadow-xl ${
-                      loading 
-                        ? 'bg-gray-300/60 text-gray-600 cursor-not-allowed' 
-                        : 'bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white shadow-sky-200/50'
-                    } backdrop-blur-md border border-sky-300/30`}
-                  >
-                    {loading ? (
-                      <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Adding Students...
-                      </span>
-                    ) : (
-                      'Add Students'
-                    )}
-                  </button>
+                  {students.length > 1 && (
+                    <div className="sm:mb-0">
+                      <Button
+                        type="button"
+                        text="Remove"
+                        onClick={() => removeStudentField(index)}
+                      />
+                    </div>
+                  )}
                 </div>
-              </form>
+              ))}
 
-              {/* Message Display */}
+              <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
+                <Button
+                  type="button"
+                  text="Add Another"
+                  onClick={addStudentField}
+                />
+                <Button
+                  type="submit"
+                  text={loading ? 'Adding...' : 'Submit'}
+                  disabled={loading}
+                />
+              </div>
+
               {message && (
-                <div className={`mt-6 p-4 rounded-xl backdrop-blur-sm border text-center font-medium ${
-                  message.includes('successfully') 
-                    ? 'bg-green-100/60 border-green-300/50 text-green-800' 
-                    : 'bg-red-100/60 border-red-300/50 text-red-800'
-                }`}>
+                <p className="text-center text-sky-700 font-semibold mt-4 bg-white/20 backdrop-blur-sm rounded-xl py-2 px-4 border border-sky-200/30">
                   {message}
-                </div>
+                </p>
               )}
-            </div>
+            </form>
           </div>
         </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-1/4 left-10 w-32 h-32 bg-sky-200/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-1/4 right-10 w-40 h-40 bg-blue-200/20 rounded-full blur-xl"></div>
-        <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-sky-300/20 rounded-full blur-lg"></div>
       </div>
     </div>
   )
